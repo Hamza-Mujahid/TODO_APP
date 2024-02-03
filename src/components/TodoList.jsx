@@ -1,22 +1,27 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import todoData from '../db/List';
 import TodoItem from './TodoItem';
-import { Button, Divider, Input, List, Space } from 'antd';
+import { Button, DatePicker, Divider, Input, List, Space, TimePicker } from 'antd';
 import SearchTodo from './SearchTodo';
 
 const TodoList = () => {
     const [tasks, setTasks] = useState(todoData);
     const [text, setText] = useState('');
-    const taskInput = useRef(null)
-
+    const date = new Date();
+    const [userTime, setUserTime] = useState(date)
     const addTask = () => {
-        const newTask = {
-            id: Date.now(),
-            text,
-            completed: false,
+        if (text) {
+            const newTask = {
+                id: Date.now(),
+                createdAt: date.getTime(),
+                taskLimit: userTime,
+                text,
+                completed: false,
+            }
+            setTasks([...tasks, newTask]);
+            setText('')
+            console.log(date.getTime(), 'Date')
         }
-        setTasks([...tasks, newTask]);
-        setText('')
     }
 
     const deleteTask = (id) => {
@@ -32,17 +37,24 @@ const TodoList = () => {
         setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task))
     }
 
+    const handleTimerChange = (e) => {
+        setUserTime(e.$d)
+        console.log(e)
+    }
+
     return (
         <>
             <Space style={{
                 display: 'flex',
-                justifyContent: 'space-around'
+                justifyContent: 'space-around',
+                flexWrap: 'wrap'
             }}>
-                <Space.Compact>
-                    <Input value={text} onChange={e => setText(e.target.value)} ref={taskInput} allowClear={true} />
+                <Space.Compact>git
+                    <Input value={text} onChange={e => setText(e.target.value)} allowClear={true} />
+                    <DatePicker showTime={{ format: 'hh:mm:ss:a' }} onChange={handleTimerChange} />
                     <Button type='primary' onClick={addTask}>Add Task</Button>
                 </Space.Compact>
-                <SearchTodo />
+                <SearchTodo dataSource={tasks} />
             </Space>
             <Divider orientation='center'>Tasks</Divider>
             <List
