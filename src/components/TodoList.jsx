@@ -39,7 +39,6 @@ const TodoList = () => {
 
     const handleTimerChange = (e) => {
         setUserTime(e.$d)
-        console.log(e)
     }
 
     return (
@@ -49,7 +48,7 @@ const TodoList = () => {
                 justifyContent: 'space-around',
                 flexWrap: 'wrap'
             }}>
-                <Space.Compact>git
+                <Space.Compact>
                     <Input value={text} onChange={e => setText(e.target.value)} allowClear={true} />
                     <DatePicker showTime={{ format: 'hh:mm:ss:a' }} onChange={handleTimerChange} />
                     <Button type='primary' onClick={addTask}>Add Task</Button>
